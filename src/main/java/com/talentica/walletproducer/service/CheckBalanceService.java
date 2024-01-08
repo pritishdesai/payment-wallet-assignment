@@ -12,7 +12,7 @@ public class CheckBalanceService {
         this.userWalletRepository = userWalletRepository;
     }
 
-    public Double getBalance(Long userId){
+    public Double getBalance(Long userId) {
         return userWalletRepository.getBalance(userId.toString());
     }
 
