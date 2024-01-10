@@ -1,7 +1,7 @@
 package com.talentica.walletproducer.validation;
 
 import com.talentica.walletproducer.dto.UsersDto;
-import com.talentica.walletproducer.entity.UserDo;
+import com.talentica.walletproducer.entity.UserEntity;
 import com.talentica.walletproducer.repository.UserRepository;
 import com.talentica.walletproducer.repository.UserWalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class UserValidationUtil {
     private UserWalletRepository userWalletRepository;
 
     public boolean checkIfUserValid(UsersDto usersDto){
-        Optional<UserDo> user = userRepository.findById(Long.parseLong(usersDto.getUserId()));
+        Optional<UserEntity> user = userRepository.findById(Long.parseLong(usersDto.getUserId()));
         return user.isPresent();
     }
 

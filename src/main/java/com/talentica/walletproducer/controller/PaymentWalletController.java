@@ -3,6 +3,7 @@ package com.talentica.walletproducer.controller;
 import com.talentica.walletproducer.dto.*;
 import com.talentica.walletproducer.service.CheckBalanceServiceImpl;
 import com.talentica.walletproducer.service.TransactionHistoryServiceImpl;
+import com.talentica.walletproducer.service.TransferFundsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,10 @@ public class PaymentWalletController {
     @Qualifier("TxnHstService")
     private TransactionHistoryServiceImpl transactionHistoryServiceImpl;
 
+    @Autowired
+    @Qualifier("transferFundsServiceImpl")
+    private TransferFundsServiceImpl transferFundsService;
+
     @GetMapping("/balance")
     public ResponseEntity<UserWalletDto> getBalance(@RequestBody UsersDto usersDto) {
         UserWalletDto userWalletDto = new UserWalletDto();
@@ -41,6 +46,7 @@ public class PaymentWalletController {
 
     @PutMapping("/transfer")
     public ResponseEntity transferFunds(@RequestBody TransferRequestDto requestDto) {
+        transferFundsService.publishTransferMessage(requestDto);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
