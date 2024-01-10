@@ -4,6 +4,7 @@ import com.talentica.walletproducer.dto.*;
 import com.talentica.walletproducer.service.CheckBalanceServiceImpl;
 import com.talentica.walletproducer.service.TransactionHistoryServiceImpl;
 import com.talentica.walletproducer.service.TransferFundsServiceImpl;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,9 @@ public class PaymentWalletController {
     public ResponseEntity transferFunds(@RequestBody TransferRequestDto requestDto) {
         transferFundsService.publishTransferMessage(requestDto);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public void addFunds(@RequestBody AddWithdrawFundsDto addWithdrawFundsDto){
 
     }
 }
