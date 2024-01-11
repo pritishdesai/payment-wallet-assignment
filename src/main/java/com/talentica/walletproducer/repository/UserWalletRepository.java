@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository("UserWalletRepo")
 public interface UserWalletRepository extends JpaRepository<UserWalletEntity, Long> {
 
-    @Query(nativeQuery = true, value = "SELECT BALANCE FROM USER_WALLET WHERE USER_ID = :userId")
+    @Query(nativeQuery = true, value = "select balance from user_wallet where user_id = :userId")
     public String getBalance(String userId);
 }

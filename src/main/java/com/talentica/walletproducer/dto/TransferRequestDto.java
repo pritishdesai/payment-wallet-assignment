@@ -5,6 +5,8 @@ import lombok.*;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TransferRequestDto {
 
         private String amount;
