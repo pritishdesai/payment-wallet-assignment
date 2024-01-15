@@ -2,16 +2,14 @@ package com.talentica.walletproducer.dto;
 
 import lombok.*;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsersDto {
+public class UserTransactionHistoryDto {
 
+    private String Id;
     private String userId;
-    private String userName;
     private String userType;
-//    private List<StripeDto> stripeDetails;
-
+    private String txnType;
+    private String amount;
 }

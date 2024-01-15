@@ -1,19 +1,15 @@
 package com.talentica.walletproducer.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.stereotype.Service;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserWalletDto {
 
-    private Long userId;
-    private Double balance;
+    private String userId;
+    private String balance;
 
 
 }

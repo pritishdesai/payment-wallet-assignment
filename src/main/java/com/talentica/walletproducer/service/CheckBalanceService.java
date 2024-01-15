@@ -1,19 +1,8 @@
 package com.talentica.walletproducer.service;
 
-import com.talentica.walletproducer.repository.UserWalletRepository;
-import org.springframework.stereotype.Service;
+import com.talentica.walletproducer.dto.UsersDto;
 
-@Service("checkBalanceService")
-public class CheckBalanceService {
+public interface CheckBalanceService {
 
-    private UserWalletRepository userWalletRepository;
-
-    public CheckBalanceService(UserWalletRepository userWalletRepository) {
-        this.userWalletRepository = userWalletRepository;
-    }
-
-    public Double getBalance(Long userId) {
-        return userWalletRepository.getBalance(userId.toString());
-    }
-
+    public String getBalance(UsersDto usersDto);
 }

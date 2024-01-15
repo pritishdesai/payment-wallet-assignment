@@ -1,12 +1,9 @@
 package com.talentica.walletproducer.controller;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
-import com.talentica.walletproducer.dto.UserTxnHstDto;
-import com.talentica.walletproducer.dto.UserWalletDto;
-import com.talentica.walletproducer.dto.UsersDto;
-import com.talentica.walletproducer.service.CheckBalanceService;
-import com.talentica.walletproducer.service.TransactionHistoryService;
-import lombok.Getter;
+import com.talentica.walletproducer.dto.*;
+import com.talentica.walletproducer.service.CheckBalanceServiceImpl;
+import com.talentica.walletproducer.service.TransactionHistoryServiceImpl;
+import com.talentica.walletproducer.service.TransferFundsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -21,26 +18,36 @@ public class PaymentWalletController {
 
     @Autowired
     @Qualifier("checkBalanceService")
-    private CheckBalanceService checkBalanceService;
+    private CheckBalanceServiceImpl checkBalanceService;
 
     @Autowired
     @Qualifier("TxnHstService")
-    private TransactionHistoryService transactionHistoryService;
+    private TransactionHistoryServiceImpl transactionHistoryServiceImpl;
+
+    @Autowired
+    @Qualifier("transferFundsServiceImpl")
+    private TransferFundsServiceImpl transferFundsService;
 
     @GetMapping("/balance")
-    public ResponseEntity<UserWalletDto> getBalance(@RequestBody UsersDto usersDto){
+    public ResponseEntity<UserWalletDto> getBalance(@RequestBody UsersDto usersDto) {
         UserWalletDto userWalletDto = new UserWalletDto();
         userWalletDto.setUserId(usersDto.getUserId());
-        userWalletDto.setBalance(checkBalanceService.getBalance(usersDto.getUserId()));
+        userWalletDto.setBalance(checkBalanceService.getBalance(usersDto));
         return new ResponseEntity<>(userWalletDto, HttpStatus.OK);
     }
 
     @GetMapping("/history")
-    public ResponseEntity<List<UserTxnHstDto>> getTransactionHistory(@RequestBody UsersDto usersDto){
-        List<UserTxnHstDto> userTxnHstDtos =
-                transactionHistoryService.
-                        getTransactionHistory(usersDto.getUserId());
-        return new ResponseEntity<>(userTxnHstDtos,HttpStatus.OK);
+    public ResponseEntity<List<UserTransactionHistoryDto>> getTransactionHistory(@RequestBody UsersDto usersDto) {
+        List<UserTransactionHistoryDto> userTxnHstDtos =
+                transactionHistoryServiceImpl.
+                        getTransactionHistory(usersDto);
+        return new ResponseEntity<>(userTxnHstDtos, HttpStatus.OK);
+    }
+
+    @PutMapping("/transfer")
+    public ResponseEntity transferFunds(@RequestBody TransferRequestDto requestDto) {
+        transferFundsService.publishTransferMessage(requestDto);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 }
