@@ -25,12 +25,20 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
     @Override
     public List<UserTransactionHistoryDto> getTransactionHistory(UsersDto dto){
         List<UserWalletTransactionHistoryEntity> list =
-                userWalletTxnHstRepository.getTransactionHistory(dto.getUserId().toString());
+                userWalletTxnHstRepository.findAllByUserIdOrderByIdDesc(Long.parseLong(dto.getUserId()));
 
         List<UserTransactionHistoryDto> listDto = new ArrayList<>();
 
-        for(UserWalletTransactionHistoryEntity txHstDo : list){
-            listDto.add(modelMapper.map(txHstDo, UserTransactionHistoryDto.class));
+        for(UserWalletTransactionHistoryEntity txHstEntity: list){
+            listDto.add(UserTransactionHistoryDto
+                    .builder()
+                    .Id(String.valueOf(txHstEntity.getId()))
+                    .userId(String.valueOf(txHstEntity.getUserId()))
+                    .userType(txHstEntity.getUserType())
+                    .amount(String.valueOf(txHstEntity.getAmount()))
+                    .txnType(txHstEntity.getTransactionType())
+                    .transactionId(txHstEntity.getTransactionId())
+                    .build());
         }
         return listDto;
     }
