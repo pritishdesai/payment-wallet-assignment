@@ -6,6 +6,7 @@ import com.stripe.model.Token;
 import com.talentica.walletproducer.dto.StripeTokenDto;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,25 +29,25 @@ public class StripeServiceImpl implements StripeService {
     @Override
     public StripeTokenDto createCardToken(StripeTokenDto stripeTokenDto) {
         try {
-            Map<String,Object> card = new HashMap<>();
-            card.put("number",stripeTokenDto.getCardNumber());
-            card.put("exp_month",Integer.parseInt(stripeTokenDto.getExpMonth()));
-            card.put("exp_year",Integer.parseInt(stripeTokenDto.getExpYear()));
-            card.put("cvc",stripeTokenDto.getCvv());
+//            Map<String,Object> card = new HashMap<>();
+//            card.put("number",stripeTokenDto.getCardNumber());
+//            card.put("exp_month",Integer.parseInt(stripeTokenDto.getExpMonth()));
+//            card.put("exp_year",Integer.parseInt(stripeTokenDto.getExpYear()));
+//            card.put("cvc",stripeTokenDto.getCvv());
+//
+//            Map<String,Object> params = new HashMap<>();
+//            params.put("card",card);
 
-            Map<String,Object> params = new HashMap<>();
-            params.put("card",card);
+            Token fundsTransferToken = Token.retrieve("tok_visa");
 
-            Token token = Token.create(params);
-            if(token != null && token.getId() != null){
+            if(!StringUtils.isEmpty(fundsTransferToken.toString())
+                && !StringUtils.isEmpty(fundsTransferToken.getId())){
                 stripeTokenDto.setSuccessFlag(true);
-                stripeTokenDto.setToken(token.getId());
+                stripeTokenDto.setToken(fundsTransferToken.getId());
             }
-
         }catch (StripeException e){
             log.error(String.format("StripeServiceImpl::createCardToken -> %s",e.toString()));
         }
-
         return stripeTokenDto;
     }
 }

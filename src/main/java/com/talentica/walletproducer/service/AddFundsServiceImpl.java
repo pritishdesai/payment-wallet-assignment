@@ -3,6 +3,7 @@ package com.talentica.walletproducer.service;
 import com.talentica.walletproducer.dto.AddWithdrawFundsDto;
 import com.talentica.walletproducer.dto.StripeTokenDto;
 import com.talentica.walletproducer.dto.UsersDto;
+import com.talentica.walletproducer.entity.UserEntity;
 import com.talentica.walletproducer.exception.InvalidStripeCardException;
 import com.talentica.walletproducer.exception.NoUserFoundException;
 import com.talentica.walletproducer.mapper.UserMapper;
@@ -12,6 +13,8 @@ import com.talentica.walletproducer.validation.UserValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -31,17 +34,20 @@ public class AddFundsServiceImpl implements AddFundsService {
                         userRepository.
                                 findById
                                         (Long.parseLong(addWithdrawFundsDto.getUserId()))
-                                .get());
+                                .orElseGet(UserEntity::new));
 
         if (userValidationUtil.checkIfUserValid(addFundsUser)) {
             log.info((String.format("AddFundsServiceImpl::publishAddFunds -> " +
                             "User Validation Check Successful for %s ",
                     addWithdrawFundsDto.toString())));
-            StripeTokenDto stripeTokenDto = new StripeTokenDto(
-                    addWithdrawFundsDto.getStripeDetails().getCardNumber(),
-                    addWithdrawFundsDto.getStripeDetails().getExpMonth(),
-                    addWithdrawFundsDto.getStripeDetails().getExpYear(),
-                    addWithdrawFundsDto.getStripeDetails().getCvv());
+            StripeTokenDto stripeTokenDto = StripeTokenDto
+                    .builder()
+                    .cardNumber(addWithdrawFundsDto.getStripeDetails().getCardNumber())
+                    .expMonth(addWithdrawFundsDto.getStripeDetails().getExpMonth())
+                    .expYear(addWithdrawFundsDto.getStripeDetails().getExpYear())
+                    .cvv(addWithdrawFundsDto.getStripeDetails().getCvv())
+                    .build();
+
             if (stripeService.createCardToken(stripeTokenDto).isSuccessFlag()){
                 log.info(String.format("AddFundsServiceImpl::publishAddFunds -> Stripe Token Generated for %s",addFundsUser.toString()));
                 addWithdrawFundsDto

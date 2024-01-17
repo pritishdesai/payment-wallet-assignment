@@ -1,9 +1,11 @@
 package com.talentica.walletproducer.controller;
 
 import com.talentica.walletproducer.dto.*;
+import com.talentica.walletproducer.service.AddFundsServiceImpl;
 import com.talentica.walletproducer.service.CheckBalanceServiceImpl;
 import com.talentica.walletproducer.service.TransactionHistoryServiceImpl;
 import com.talentica.walletproducer.service.TransferFundsServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,19 +17,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/wallet")
+@RequiredArgsConstructor
 public class PaymentWalletController {
 
-    @Autowired
-    @Qualifier("checkBalanceService")
-    private CheckBalanceServiceImpl checkBalanceService;
-
-    @Autowired
-    @Qualifier("TxnHstService")
-    private TransactionHistoryServiceImpl transactionHistoryServiceImpl;
-
-    @Autowired
-    @Qualifier("transferFundsServiceImpl")
-    private TransferFundsServiceImpl transferFundsService;
+    private final CheckBalanceServiceImpl checkBalanceService;
+    private final TransactionHistoryServiceImpl transactionHistoryServiceImpl;
+    private final TransferFundsServiceImpl transferFundsService;
+    private final AddFundsServiceImpl addFundsService;
 
     @GetMapping("/balance")
     public ResponseEntity<UserWalletDto> getBalance(@RequestBody UsersDto usersDto) {
@@ -51,7 +47,8 @@ public class PaymentWalletController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/add")
     public void addFunds(@RequestBody AddWithdrawFundsDto addWithdrawFundsDto){
-
+        addFundsService.publishAddFunds(addWithdrawFundsDto);
     }
 }
