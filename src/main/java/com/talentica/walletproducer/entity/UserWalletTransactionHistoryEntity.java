@@ -1,6 +1,8 @@
 package com.talentica.walletproducer.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
@@ -9,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_wallet_tx_hst")
+@Getter
 public class UserWalletTransactionHistoryEntity {
 
     @Id
@@ -18,6 +21,7 @@ public class UserWalletTransactionHistoryEntity {
     private String userType;
     private String transactionType; // Credit Or Debit
     private BigDecimal amount; //Amount that is credited or debited.
+    private String transactionId;
 
     private LocalDateTime actionDate;
     @CreatedDate

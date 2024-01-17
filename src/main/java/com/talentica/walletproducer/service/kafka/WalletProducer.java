@@ -39,7 +39,7 @@ public class WalletProducer {
     public void addFundsPublish(AddWithdrawFundsDto addWithdrawFundsDto){
         Message<AddWithdrawFundsDto> message = MessageBuilder
                 .withPayload(addWithdrawFundsDto)
-                .setHeader(KafkaHeaders.TOPIC,AppConstants.TOPIC_ADD_FUNDS)
+                .setHeader(KafkaHeaders.TOPIC,topicAddFunds)
                 .build();
 
         kafkaTemplate.send(AppConstants.TOPIC_ADD_FUNDS,
@@ -51,7 +51,19 @@ public class WalletProducer {
                 addWithdrawFundsDto.getUserId()));
     }
 
-    public void withdrawFundsPublish(){
+    public void withdrawFundsPublish(AddWithdrawFundsDto addWithdrawFundsDto){
+        Message<AddWithdrawFundsDto> message = MessageBuilder
+                .withPayload(addWithdrawFundsDto)
+                .setHeader(KafkaHeaders.TOPIC,topicWithdrawFunds)
+                .build();
+
+        kafkaTemplate.send(topicWithdrawFunds,message);
+
+        log.info(String.format("WalletProducer::withdrawFundsPublish -> " +
+                        "Withdraw Funds Request Published For Amount %s ,User %s",
+                addWithdrawFundsDto.getAmount(),
+                addWithdrawFundsDto.getUserId()));
+
 
     }
 
@@ -63,10 +75,10 @@ public class WalletProducer {
 
         Message<TransferRequestDto> message = MessageBuilder
                 .withPayload(transferRequestDto)
-                .setHeader(KafkaHeaders.TOPIC,AppConstants.TOPIC_TRANSFER_FUNDS)
+                .setHeader(KafkaHeaders.TOPIC,topicTransferFunds)
                 .build();
 
-        kafkaTemplate.send(AppConstants.TOPIC_TRANSFER_FUNDS, message);
+        kafkaTemplate.send(topicTransferFunds, message);
 
         log.info(String.format("Transfer Request Published between %s and %s",
                 transferRequestDto.getSender().toString(),

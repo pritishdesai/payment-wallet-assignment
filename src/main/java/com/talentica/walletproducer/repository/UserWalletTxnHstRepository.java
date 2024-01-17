@@ -10,7 +10,7 @@ import java.util.List;
 @Repository("UserTxnHstRepo")
 public interface UserWalletTxnHstRepository extends JpaRepository<UserWalletTransactionHistoryEntity,Long> {
 
-    @Query(nativeQuery = true,value = "select * from user_wallet_tx_hst where user_id = :userId")
-    public List<UserWalletTransactionHistoryEntity> getTransactionHistory(String userId);
+
+    public List<UserWalletTransactionHistoryEntity> findAllByUserIdOrderByIdDesc(Long userId);
 
 }

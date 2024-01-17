@@ -1,14 +1,8 @@
 package com.talentica.walletproducer.controller;
 
 import com.talentica.walletproducer.dto.*;
-import com.talentica.walletproducer.service.AddFundsServiceImpl;
-import com.talentica.walletproducer.service.CheckBalanceServiceImpl;
-import com.talentica.walletproducer.service.TransactionHistoryServiceImpl;
-import com.talentica.walletproducer.service.TransferFundsServiceImpl;
+import com.talentica.walletproducer.service.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +20,7 @@ public class PaymentWalletController {
     private final TransactionHistoryServiceImpl transactionHistoryServiceImpl;
     private final TransferFundsServiceImpl transferFundsService;
     private final AddFundsServiceImpl addFundsService;
+    private final WithdrawFundsServiceImpl withdrawFundsService;
 
     @GetMapping("/balance")
     public ResponseEntity<UserWalletDto> getBalance(@RequestBody UsersDto usersDto) {
@@ -70,6 +65,22 @@ public class PaymentWalletController {
                         .message("Add Funds Request Published Successfully")
                         .date(LocalDate.now())
                         .build();
+        return new ResponseEntity<>(responseDto,HttpStatus.OK);
+    }
+
+    @PutMapping("/withdraw")
+    public ResponseEntity<ResponseDto> withdrawFunds(@RequestBody AddWithdrawFundsDto addWithdrawFundsDto){
+        addWithdrawFundsDto.setTransactionId(UUID.randomUUID().toString());
+        withdrawFundsService.publishWithdrawFunds(addWithdrawFundsDto);
+        ResponseDto responseDto =
+                ResponseDto
+                        .builder()
+                        .httpStatus(HttpStatus.OK)
+                        .message("Withdraw Funds Request Published Successfully")
+                        .transactionId(addWithdrawFundsDto.getTransactionId())
+                        .date(LocalDate.now())
+                        .build();
+
         return new ResponseEntity<>(responseDto,HttpStatus.OK);
     }
 }
