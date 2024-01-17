@@ -1,12 +1,25 @@
 package com.talentica.walletproducer.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
 public class KafkaConfig {
+
+    @Value("${TOPIC_ADD_FUNDS}")
+    private String topicAddFunds;
+
+    @Value("${TOPIC_WITHDRAW_FUNDS}")
+    private String topicWithdrawFunds;
+
+    @Value("${TOPIC_TRANSFER_FUNDS}")
+    private String topicTransferFunds;
+
+    @Value("${TOPIC_SPLIT_FUNDS}")
+    private String topicSplitFunds;
 
     @Bean
     public NewTopic addFundsTopic(){
