@@ -13,4 +13,5 @@ public class AddWithdrawFundsDto {
     private String amount;
     private StripeDto stripeDetails;
     private String requestType; //Add Or Withdraw (A/W)
+    private String transactionId;
 }
