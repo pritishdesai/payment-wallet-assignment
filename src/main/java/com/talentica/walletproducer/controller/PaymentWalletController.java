@@ -21,6 +21,9 @@ public class PaymentWalletController {
     private final TransferFundsServiceImpl transferFundsService;
     private final AddFundsServiceImpl addFundsService;
     private final WithdrawFundsServiceImpl withdrawFundsService;
+    private final SplitFundsServiceImpl splitFundsService;
+
+    private ResponseDto responseDto;
 
     @GetMapping("/balance")
     public ResponseEntity<UserWalletDto> getBalance(@RequestBody UsersDto usersDto) {
@@ -42,7 +45,7 @@ public class PaymentWalletController {
     public ResponseEntity<ResponseDto> transferFunds(@RequestBody TransferRequestDto requestDto) {
         requestDto.setTransactionId(UUID.randomUUID().toString());
         transferFundsService.publishTransferMessage(requestDto);
-        ResponseDto responseDto =
+        responseDto =
                 ResponseDto
                         .builder()
                         .httpStatus(HttpStatus.OK)
@@ -57,7 +60,7 @@ public class PaymentWalletController {
     public ResponseEntity<ResponseDto> addFunds(@RequestBody AddWithdrawFundsDto addWithdrawFundsDto){
         addWithdrawFundsDto.setTransactionId(UUID.randomUUID().toString());
         addFundsService.publishAddFunds(addWithdrawFundsDto);
-        ResponseDto responseDto =
+        responseDto =
                 ResponseDto
                         .builder()
                         .httpStatus(HttpStatus.OK)
@@ -72,7 +75,7 @@ public class PaymentWalletController {
     public ResponseEntity<ResponseDto> withdrawFunds(@RequestBody AddWithdrawFundsDto addWithdrawFundsDto){
         addWithdrawFundsDto.setTransactionId(UUID.randomUUID().toString());
         withdrawFundsService.publishWithdrawFunds(addWithdrawFundsDto);
-        ResponseDto responseDto =
+        responseDto =
                 ResponseDto
                         .builder()
                         .httpStatus(HttpStatus.OK)
@@ -81,6 +84,21 @@ public class PaymentWalletController {
                         .date(LocalDate.now())
                         .build();
 
+        return new ResponseEntity<>(responseDto,HttpStatus.OK);
+    }
+
+    @PutMapping("/split")
+    public ResponseEntity<ResponseDto> splitFunds(@RequestBody SplitFundsDto splitFundsDto){
+        splitFundsDto.setTransactionId(UUID.randomUUID().toString());
+        splitFundsService.splitFunds(splitFundsDto);
+        responseDto =
+                ResponseDto
+                        .builder()
+                        .httpStatus(HttpStatus.OK)
+                        .message("Split Funds Request Published Successfully!")
+                        .transactionId(splitFundsDto.getTransactionId())
+                        .date(LocalDate.now())
+                        .build();
         return new ResponseEntity<>(responseDto,HttpStatus.OK);
     }
 }

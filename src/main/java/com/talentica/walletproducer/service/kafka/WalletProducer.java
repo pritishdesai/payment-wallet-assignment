@@ -2,7 +2,9 @@ package com.talentica.walletproducer.service.kafka;
 
 import com.talentica.walletproducer.constants.AppConstants;
 import com.talentica.walletproducer.dto.AddWithdrawFundsDto;
+import com.talentica.walletproducer.dto.SplitFundsDto;
 import com.talentica.walletproducer.dto.TransferRequestDto;
+import com.talentica.walletproducer.service.SplitFundsService;
 import com.talentica.walletproducer.service.TransferFundsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +69,17 @@ public class WalletProducer {
 
     }
 
-    public void splitFundsPublish(){
+    public void splitFundsPublish(SplitFundsDto splitFundsDto){
+        Message<SplitFundsDto> splitFundsMessage = MessageBuilder
+                .withPayload(splitFundsDto)
+                .setHeader(KafkaHeaders.TOPIC,topicSplitFunds)
+                .build();
 
+        kafkaTemplate.send(topicSplitFunds,splitFundsMessage);
+
+        log.info(String.format("Split Funds Request Published between Merchant %s and Customers %s",
+                splitFundsDto.getMerchantUserId(),
+                splitFundsDto.getCustomerSplitDetails().toString()));
     }
 
     public void transferFunds(TransferRequestDto transferRequestDto){
