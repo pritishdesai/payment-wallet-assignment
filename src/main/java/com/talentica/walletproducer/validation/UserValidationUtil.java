@@ -28,9 +28,21 @@ public class UserValidationUtil {
         String balance = userWalletRepository.getBalance(usersDto.getUserId());
         return BigDecimal.valueOf(Double.parseDouble(balance)).compareTo(BigDecimal.valueOf(Double.parseDouble(amount))) >= 0;
 
-
     }
 
+    public boolean checkIfUserIsMerchant(UsersDto usersDto){
+        Optional<UserEntity> user = userRepository.findById(Long.parseLong(usersDto.getUserId()));
+        return user
+                .orElseGet(UserEntity::new)
+                .getUserType()
+                .equalsIgnoreCase("Merchant");
+    }
+
+    public boolean checkIfUserValidByUserId(String userId){
+        Optional<UserEntity> user = userRepository.findById(Long.parseLong(userId));
+        return user.isPresent();
+
+    }
 
 
 }

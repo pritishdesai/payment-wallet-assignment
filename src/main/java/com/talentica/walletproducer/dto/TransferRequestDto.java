@@ -8,6 +8,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class TransferRequestDto {
 
         private String amount;
