@@ -1,17 +1,18 @@
 package com.talentica.walletproducer.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_wallet_tx_hst")
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserWalletTransactionHistoryEntity {
 
     @Id

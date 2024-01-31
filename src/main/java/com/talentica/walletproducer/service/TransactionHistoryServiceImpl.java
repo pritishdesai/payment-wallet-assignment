@@ -4,23 +4,19 @@ import com.talentica.walletproducer.dto.UserTransactionHistoryDto;
 import com.talentica.walletproducer.dto.UsersDto;
 import com.talentica.walletproducer.entity.UserWalletTransactionHistoryEntity;
 import com.talentica.walletproducer.repository.UserWalletTxnHstRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service("TxnHstService")
+@Service("transactionHistoryService")
+@RequiredArgsConstructor
 public class TransactionHistoryServiceImpl implements TransactionHistoryService{
 
-    @Autowired
-    @Qualifier("UserTxnHstRepo")
-    private UserWalletTxnHstRepository userWalletTxnHstRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+//    @Autowired
+//    @Qualifier("UserTxnHstRepo")
+    private final UserWalletTxnHstRepository userWalletTxnHstRepository;
 
     @Override
     public List<UserTransactionHistoryDto> getTransactionHistory(UsersDto dto){

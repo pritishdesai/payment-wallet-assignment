@@ -6,8 +6,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
